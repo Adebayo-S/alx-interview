@@ -3,6 +3,7 @@
 Each box is numbered sequentially from 0 to n - 1 and
 each box may contain keys to the other boxes. """
 
+
 def canUnlockAll(boxes):
     """ check if all boxes are unlocked """
     box_count = [0] * len(boxes)
