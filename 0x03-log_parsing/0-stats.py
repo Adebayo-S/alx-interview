@@ -36,3 +36,6 @@ if __name__ == "__main__":
                 printlog(status, file_size)
     except KeyboardInterrupt:
         printlog(status, file_size)
+        raise
+    else:
+        printlog(status, file_size)
