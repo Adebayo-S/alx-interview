@@ -5,11 +5,12 @@ Input format: <IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status
                 code> <file size>
 """
 import sys
-
+import re
 
 count = 0
 file_size = 0
 status = {}
+regex = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[(.*)\] "(.*)" (\d+) (\d+)'
 
 
 def printlog(status, file_size) -> None:
@@ -22,15 +23,16 @@ def printlog(status, file_size) -> None:
 if __name__ == "__main__":
     try:
         for line in sys.stdin:
-            parsed = line.split(' ')
-            count += 1
             try:
-                file_size += int(parsed[-1])
-                status_code = parsed[-2]
-                if status_code and type(eval(status_code)) == int:
-                    status[status_code] = status[status_code] + \
-                        1 if status_code in status else 1
-            except (IndexError, ValueError):
+                match = re.match(regex, line)
+                if match:
+                    count += 1
+                    file_size += int(match.group(5))
+                    status_code = match.group(4)
+                    if status_code and type(eval(status_code)) == int:
+                        status[status_code] = status[status_code] + \
+                            1 if status_code in status else 1
+            except BaseException:
                 pass
             if count % 10 == 0:
                 printlog(status, file_size)
