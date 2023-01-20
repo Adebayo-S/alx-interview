@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """
 script that reads stdin line by line and computes metrics:
+Input format: <IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status
+                code> <file size>
 """
 import sys
 
@@ -8,14 +10,13 @@ import sys
 count = 0
 file_size = 0
 status = {}
-regex = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[(.*)\] "(.*)" (\d+) (\d+)'
 
 
 def printlog(status, file_size) -> None:
     """parse log and print formatted log"""
-    print(f"File size: {file_size}")
+    print("File size: {}".format(file_size))
     for k, v in sorted(status.items(), key=lambda item: int(item[0])):
-        print(f"{k}: {v}")
+        print("{}: {}".format(k, v))
 
 
 if __name__ == "__main__":
