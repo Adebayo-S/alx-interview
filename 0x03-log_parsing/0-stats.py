@@ -9,6 +9,7 @@ import re
 count = 0
 file_size = 0
 status = {}
+regex = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[(.*)\] "(.*)" (\d+) (\d+)'
 
 
 def printlog(status, file_size) -> None:
@@ -21,8 +22,7 @@ def printlog(status, file_size) -> None:
 if __name__ == "__main__":
     try:
         for line in sys.stdin:
-            match = re.match(
-                r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[(.*)\] "(.*)" (\d+) (\d+)', line)
+            match = re.match(regex, line)
             if match:
                 count += 1
                 file_size += int(match.group(5))
