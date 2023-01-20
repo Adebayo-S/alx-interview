@@ -12,6 +12,7 @@ status = {}
 
 
 def printlog(status, file_size) -> None:
+    """parse log and print formatted log"""
     print(f"File size: {file_size}")
     for k, v in sorted(status.items(), key=lambda item: int(item[0])):
         print(f"{k}: {v}")
