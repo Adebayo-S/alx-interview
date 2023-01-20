@@ -33,7 +33,7 @@ if __name__ == "__main__":
                         status[status_code] = status[status_code] + \
                             1 if status_code in status else 1
                 else:
-                  continue
+                    continue
             except BaseException:
                 pass
             if count % 10 == 0:
