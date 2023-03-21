@@ -1,45 +1,50 @@
 #!/usr/bin/python3
 """
-script that reads stdin line by line and computes metrics:
+Script that reads stdin line by line and computes metrics:
 Input format: <IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status
                 code> <file size>
 """
+
 import sys
-import re
-
-count = 0
-file_size = 0
-status = {}
-regex = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[(.*)\] "(.*)" (\d+) (\d+)'
+code = {"200": 0, "301": 0, "400": 0, "401": 0,
+        "403": 0, "404": 0, "405": 0, "500": 0}
+sum = 0
 
 
-def printlog(status, file_size) -> None:
-    """parse log and print formatted log"""
-    print("File size: {}".format(file_size))
-    for k, v in sorted(status.items(), key=lambda item: int(item[0])):
-        print("{}: {}".format(k, v))
+def print_stats():
+    """
+    Function that print stats about log
+    """
+    global sum
+
+    print('File size: {}'.format(sum))
+    stcdor = sorted(code.keys())
+    for each in stcdor:
+        if code[each] > 0:
+            print('{}: {}'.format(each, code[each]))
 
 
 if __name__ == "__main__":
+    cnt = 0
     try:
-        for line in sys.stdin:
+        """ Iterate the standard input """
+        for data in sys.stdin:
             try:
-                match = re.match(regex, line)
-                if match:
-                    count += 1
-                    file_size += int(match.group(5))
-                    status_code = match.group(4)
-                    if status_code and type(eval(status_code)) == int:
-                        status[status_code] = status[status_code] + \
-                            1 if status_code in status else 1
-                else:
-                    continue
-            except BaseException:
+                fact = data.split(' ')
+                """ If there is a status code """
+                if fact[-2] in code:
+                    code[fact[-2]] += 1
+                """ If there is a length """
+                sum += int(fact[-1])
+            except Exception:
                 pass
-            if count % 10 == 0:
-                printlog(status, file_size)
+            """ Printing control """
+            cnt += 1
+            if cnt == 10:
+                print_stats()
+                cnt = 0
     except KeyboardInterrupt:
-        printlog(status, file_size)
+        print_stats()
         raise
     else:
-        printlog(status, file_size)
+        print_stats()
